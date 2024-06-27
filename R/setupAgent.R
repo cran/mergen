@@ -35,7 +35,11 @@ setupopenaiAgent<-function(model,type=c("chat","completion"),
 #' set up an online LLM API for subsequent tasks
 #'
 #' This function sets up an large language model API for tasks.
-#' @param name Name of the API you want to use. Currently supported APIs are "openai" and "replicate"
+#' @param name A string for the name of the API, one of "openai", "replicate" or "generic".
+#'             Currently supported APIs are "openai" and "replicate". If the user wishes to use
+#'             another API that has similar syntax to openai API this is also supported via the
+#'             the "generic" option. In this case, the user should also provide a url for the API
+#'             using the
 #' @param type Specify type of model (chat or completion). This parameter only needs to be specified when using 'openai
 #' @param model LLM model you wish to use.
 #' For openAI chat model examples are:
@@ -49,9 +53,10 @@ setupopenaiAgent<-function(model,type=c("chat","completion"),
 #' For replicate models examples are:\itemize{
 #'  \item llama-2-70b-chat ( as '02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3')
 #'  \item llama-2-13b-chat ( as 'f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d')}
-#'  For a full list of openAI models
-#'  \href{https://platform.openai.com/docs/models/overview}{click here}. For a full list of Replicate models,
-#'  \href{https://replicate.com/collections/language-models}{click here}.
+#'  For a full list of openAI models see
+#'  https://platform.openai.com/docs/models/overview/. For a full list of Replicate models,
+#'  see https://replicate.com/collections/language-models.
+#' @param url the url for the API in case the API "generic" is selected. (Default: NULL)
 #' @param ai_api_key personal API key for accessing LLM
 #' @return A list holding agent information.
 #' @examples
@@ -65,7 +70,9 @@ setupopenaiAgent<-function(model,type=c("chat","completion"),
 #' @export
 
 
-setupAgent<-function(name=c("openai","replicate"), type=NULL, model=NULL, ai_api_key=Sys.getenv("AI_API_KEY")){
+setupAgent<-function(name=c("openai","replicate","generic"),
+                     type=NULL, model=NULL,url=NULL, ai_api_key=Sys.getenv("AI_API_KEY")){
+
   if (ai_api_key==""){
     stop("Invalid API key provided. Please set this as a string or load AI_API_KEY into your system environment.")
   }
@@ -92,7 +99,7 @@ setupAgent<-function(name=c("openai","replicate"), type=NULL, model=NULL, ai_api
       base_url ="https://api.openai.com/v1/chat/completions"
       if (is.null(model)){
         warning ("No model selected. Model will be set to gtp-3.5-turbo.")
-        model = "gtp-3.5-turbo"
+        model = "gpt-3.5-turbo"
       }else if(!model%in% chatModels){
         stop(paste("Invalid model selected. Please choose one of the following models:\n ",chatModels))
       }
@@ -108,6 +115,13 @@ setupAgent<-function(name=c("openai","replicate"), type=NULL, model=NULL, ai_api
     }else{
       stop(paste("Type",type,"not supported"))
     }
+    headers <- c(
+      "Authorization" = paste("Bearer", ai_api_key),
+      "Content-Type" = "application/json")
+  }
+  else if(name=="generic"){
+
+    base_url=url
     headers <- c(
       "Authorization" = paste("Bearer", ai_api_key),
       "Content-Type" = "application/json")

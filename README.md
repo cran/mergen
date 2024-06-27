@@ -12,6 +12,10 @@ performance and accuracy. mergen features a user-friendly chat
 interface, enabling users to interact with the AI agent and extract
 valuable insights from their data effortlessly.
 
+The package website with full documentation is [here](http://bioinformatics.mdc-berlin.de/mergen/).
+
+If you want to use **mergen** in your Rstudio session via an embedded chatbot, try out our companion package [mergenstudio](https://github.com/BIMSBbioinfo/mergenstudio/).
+
 ### Installation
 
 The easiest way to install mergen is via `install.packages`
@@ -32,9 +36,10 @@ pak::pak("BIMSBbioinfo/mergen")
 
 ### Prerequisites
 
-- Make an AI account
+- Make an AI platform account. Choices are openai.com, neets.ai (at the time of writing free with some limits), replicate.com , perplexity.ai etc.
+  In addition, you can locally run an LLM in server mode and you can interact with it via API. One example is [GPT4all](https://gpt4all.io/index.html). Some of these solutions are not tested but should work with mergen. 
 - [Create an OpenAI API
-  key](https://platform.openai.com/account/api-keys) to use with the
+  key](https://platform.openai.com/docs/api-reference/introduction) to use with the
   package
 - [Create a replicate API key](https://replicate.com/pricing)
 - Set up the API key in R
@@ -80,6 +85,13 @@ can use the following command:
 ``` r
 Sys.setenv(AI_API_KEY="your_key")
 ```
+
+### Citing mergen
+If you used mergen please cite:
+
+* Jacqueline A Jansen, Artür Manukyan, Nour Al Khoury, Altuna Akalin. _(2023)_ *"[Leveraging large language models for data analysis automation]( https://doi.org/10.1101/2023.12.11.571140)"* _bioRxiv_, doi: 10.1101/2023.12.11.571140
+
+
 
 ### Getting help
 
